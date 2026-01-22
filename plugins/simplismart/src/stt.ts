@@ -158,10 +158,9 @@ export class STT extends stt.STT {
 
   async _recognize(
     buffer: AudioBuffer,
-    options?: { language?: string; connOptions?: APIConnectOptions },
     abortSignal?: AbortSignal,
   ): Promise<stt.SpeechEvent> {
-    const resolvedLanguage = options?.language ?? this.#opts.language ?? 'en';
+    const resolvedLanguage = this.#opts.language ?? 'en';
     const wavBytes = this.#createWav(buffer);
     const audioB64 = wavBytes.toString('base64');
 
@@ -215,7 +214,7 @@ export class STT extends stt.STT {
     }
 
     const baseUrl = this.#opts.baseUrl ?? SIMPLISMART_BASE_URL;
-    const timeout = options?.connOptions?.timeout ?? 30000;
+    const timeout = 30000;
 
     try {
       const controller = new AbortController();
@@ -263,6 +262,7 @@ export class STT extends stt.STT {
             text,
             startTime,
             endTime,
+            confidence: 1.0,
           },
         ],
       };
@@ -352,7 +352,7 @@ export class SpeechStream extends stt.SpeechStream {
       const timeout = setTimeout(() => {
         ws.close();
         reject(new Error('WebSocket connection timeout'));
-      }, this._connOptions?.timeout ?? 30000);
+      }, 30000);
 
       ws.on('open', () => {
         clearTimeout(timeout);
@@ -465,6 +465,9 @@ export class SpeechStream extends stt.SpeechStream {
       const speechData: stt.SpeechData = {
         language: this.#opts.language ?? 'en',
         text: transcriptText,
+        startTime: 0.0,
+        endTime: 0.0,
+        confidence: 1.0,
       };
 
       // Create final transcript event
