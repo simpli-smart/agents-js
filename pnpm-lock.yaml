@@ -823,6 +823,9 @@ importers:
       '@livekit/agents':
         specifier: workspace:*
         version: link:../../agents
+      '@livekit/agents-plugin-silero':
+        specifier: workspace:*
+        version: link:../silero
       '@livekit/agents-plugins-test':
         specifier: workspace:*
         version: link:../test
